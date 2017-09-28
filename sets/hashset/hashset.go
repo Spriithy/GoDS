@@ -11,8 +11,9 @@ package hashset
 
 import (
 	"fmt"
-	"github.com/emirpasic/gods/sets"
 	"strings"
+
+	"github.com/emirpasic/gods/sets"
 )
 
 func assertSetImplementation() {
@@ -55,6 +56,46 @@ func (set *Set) Contains(items ...interface{}) bool {
 		}
 	}
 	return true
+}
+
+// Intersect returns whether two sets intersect (i.e. share one or more item).
+func (set *Set) Intersect(other sets.Set) bool {
+	for k := range set.items {
+		if other.Contains(k) {
+			return true
+		}
+	}
+	return false
+}
+
+// Intersection returns the set of elements that are contained in both initial sets.Set.
+func (set *Set) Intersection(other sets.Set) sets.Set {
+	inter := New()
+	for k := range set.items {
+		if other.Contains(k) {
+			inter.Add(k)
+		}
+	}
+	return inter
+}
+
+// Union returns the set of elements of both sets.
+func (set *Set) Union(other sets.Set) sets.Set {
+	union := New()
+	union.Add(set.items)
+	union.Add(other.Values()...)
+	return union
+}
+
+// Subtract returns the set of elements from the first set that are not in the second set.
+func (set *Set) Subtract(other sets.Set) sets.Set {
+	diff := New()
+	for k := range set.items {
+		if !other.Contains(k) {
+			diff.Add(k)
+		}
+	}
+	return diff
 }
 
 // Empty returns true if set does not contain any elements.
